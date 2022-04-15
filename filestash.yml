@@ -1,0 +1,25 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  creationTimestamp: null
+  labels:
+    app: filestash
+  name: filestash
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: filestash
+  strategy: {}
+  template:
+    metadata:
+      creationTimestamp: null
+      labels:
+        app: filestash
+    spec:
+      containers:
+      - name: filestash
+        image: brandonmosher/filestash:latest
+        imagePullPolicy: IfNotPresent
+        ports:
+        - containerPort: 8334

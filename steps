@@ -1,0 +1,51 @@
+format sd card FAT LBS
+untar to sdcard
+edit cmdline.txt
+setup-alpine
+update and upgrade
+install sudo curl
+rc-update add cgroup default?
+create user
+include home directory?
+lbu commit
+install k3s
+
+as root:
+sudo mount /media/mmcblk0p1 -o rw,remount
+
+sudo ln -s /media/mmcblk0p1/rancher/ /var/lib/rancher
+
+curl -sfL https://get.k3s.io | sh -s - --docker --data-dir /media/var/lib/rancher/k3s  --kubelet-arg "root-dir=/media/var/lib/kubelet" --kubelet-arg "container-log-max-files=1" --kubelet-arg "container-log-max-size=1Mi"
+sh -s - server --disable-agent
+rm -rf ~/.kube && mkdir -p ~/.kube/config && sudo cp /etc/rancher/k3s/k3s.yaml ~/.kube/config && sudo chown -R $USER:$USER ~/.kube && export KUBECONFIG=~/.kube/config/k3s.yaml
+
+echo 'source <(kubectl completion bash)' >>~/.bashrcsource <(kubectl completion bash)
+
+force docker?
+
+
+su - root
+
+mkdir /media/var
+
+mount -o rw /dev/sda /media/var
+
+mkdir -p /media/var/lib/docker
+
+mkdir /var/lib/docker
+
+mount --rbind /media/var/lib/docker/ /var/lib/docker
+
+vi /etc/apk/repositories
+
+apk --update add docker
+
+service docker start
+
+cat <<EOF | docker build - -t brandon/hello:latest
+FROM ubuntu
+
+ENTRYPOINT echo "Hello!"
+EOF
+
+curl -sfL https://get.k3s.io | sh -s - --docker --datastore-endpoint http://localhost:2379

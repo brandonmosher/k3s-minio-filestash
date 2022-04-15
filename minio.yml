@@ -1,0 +1,26 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  creationTimestamp: null
+  labels:
+    app: minio
+  name: minio
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: minio
+  strategy: {}
+  template:
+    metadata:
+      creationTimestamp: null
+      labels:
+        app: minio
+    spec:
+      containers:
+      - image: minio/minio
+        args: ["server", "/data", "--console-address", ":9001"]
+        name: minio
+        ports:
+        - containerPort: 9000
+        - containerPort: 9001
